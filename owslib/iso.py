@@ -743,6 +743,7 @@ class CI_OnlineResource(object):
             self.name = None
             self.description = None
             self.function = None
+            self.mimetype = None
         else:
             val = md.find(util.nspath_eval('gmd:linkage/gmd:URL', namespaces))
             self.url = util.testXMLValue(val)
@@ -750,8 +751,13 @@ class CI_OnlineResource(object):
             val = md.find(util.nspath_eval('gmd:protocol/gco:CharacterString', namespaces))
             self.protocol = util.testXMLValue(val)
 
-            val = md.find(util.nspath_eval('gmd:name/gco:CharacterString', namespaces))
-            self.name = util.testXMLValue(val)
+            name_elt = md.find(util.nspath_eval('gmd:name', namespaces))
+            child = name_elt[-1]  # or `name_elt[0]`, this doesn't should make any difference
+            # Child node is most often an 'gco:CharacterString' element:
+            self.name = util.testXMLValue(child)
+            # But it could be 'gmx:MimeFileType' element too,
+            # which contains an attribute about mime-type:
+            self.mimetype = util.testXMLAttribute(child, 'type')
 
             val = md.find(util.nspath_eval('gmd:description/gco:CharacterString', namespaces))
             self.description = util.testXMLValue(val)
