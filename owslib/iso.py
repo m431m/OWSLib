@@ -752,12 +752,13 @@ class CI_OnlineResource(object):
             self.protocol = util.testXMLValue(val)
 
             name_elt = md.find(util.nspath_eval('gmd:name', namespaces))
-            child = name_elt[-1]  # or `name_elt[0]`, this doesn't should make any difference
-            # Child node is most often an 'gco:CharacterString' element:
-            self.name = util.testXMLValue(child)
-            # But it could be 'gmx:MimeFileType' element too,
-            # which contains an attribute about mime-type:
-            self.mimetype = util.testXMLAttribute(child, 'type')
+            if name_elt:
+                child = name_elt[-1]  # or `name_elt[0]`, this doesn't should make any difference
+                # Child node is most often an 'gco:CharacterString' element:
+                self.name = util.testXMLValue(child)
+                # But it could be 'gmx:MimeFileType' element too,
+                # which contains an attribute about mime-type:
+                self.mimetype = util.testXMLAttribute(child, 'type')
 
             val = md.find(util.nspath_eval('gmd:description/gco:CharacterString', namespaces))
             self.description = util.testXMLValue(val)
