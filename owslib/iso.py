@@ -752,7 +752,7 @@ class CI_OnlineResource(object):
             self.protocol = util.testXMLValue(val)
 
             name_elt = md.find(util.nspath_eval('gmd:name', namespaces))
-            if len(name_elt):
+            if name_elt is not None and len(name_elt):
                 child = name_elt[-1]  # or `name_elt[0]`, this doesn't should make any difference
                 # Child node is most often an 'gco:CharacterString' element:
                 self.name = util.testXMLValue(child)
